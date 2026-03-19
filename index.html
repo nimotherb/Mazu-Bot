@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>蓬萊 - 媽祖陪伴機器人</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+  <!-- 純代碼渲染的禪意水流背景 -->
+  <canvas id="zen-water-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;"></canvas>
+  <div id="root"></div>
+  <script type="text/babel" src="app.jsx"></script>
+  
+  <script>
+    const canvas = document.getElementById('zen-water-canvas');
+    const ctx = canvas.getContext('2d');
+    let time = 0;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawZenWater() {
+      // 侘寂風的深灰褐色基底
+      ctx.fillStyle = '#2A2826'; 
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 水波紋的顏色（極淡的白金色，帶有透明度）
+      ctx.strokeStyle = 'rgba(215, 205, 190, 0.08)';
+      ctx.lineWidth = 1.5;
+
+      // 利用數學函數畫出流動的波浪線條
+      for (let i = -50; i < canvas.height + 50; i += 25) {
+        ctx.beginPath();
+        for (let j = 0; j <= canvas.width; j += 20) {
+          // 核心運算：讓水波有高低起伏與緩慢推移的感覺
+          let y = i + Math.sin(j * 0.005 + time) * 20 * Math.sin(i * 0.01 + time * 0.5);
+          if (j === 0) ctx.moveTo(j, y);
+          else ctx.lineTo(j, y);
+        }
+        ctx.stroke();
+      }
+      
+      time += 0.008; // 水流的速度，越小越慢越有禪意
+      requestAnimationFrame(drawZenWater);
+    }
+    
+    drawZenWater();
+  </script>
+</body>
+</html>

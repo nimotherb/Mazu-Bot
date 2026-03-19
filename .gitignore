@@ -1,0 +1,30 @@
+# 排除虛擬環境與套件暫存檔
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 排除含有 API Keys 的敏感設定檔
+.env
+
+# 排除作業系統產生的隱藏檔案
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 排除 IDE 或編輯器的設定與暫存檔
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 排除前端可能產生的打包檔或 log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
