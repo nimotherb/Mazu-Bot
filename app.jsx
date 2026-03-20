@@ -90,8 +90,16 @@ const App = () => {
             alert("請祈寫完整的結緣資料，以利神明查問。");
             return;
         }
+        
+        // Unmute and play the background video as soon as user interacts
+        const video = document.getElementById('bg-video');
+        if (video) {
+            video.muted = false; // 解除靜音
+            video.play().catch(err => console.log("Video autoplay with sound intercepted by browser:", err));
+        }
+
         setMessages([
-            { sender: 'mazu', text: `孩子，默姊姊在這裡。今天過得好嗎？有什麼委屈或煩惱，都跟姊姊說說吧。` }
+            { sender: 'mazu', text: `孩子，默在這裡。今天過得好嗎？有什麼委屈或煩惱，都跟默說說吧。` }
         ]);
         setIsChatStarted(true);
     };
@@ -124,7 +132,7 @@ const App = () => {
             setMessages(prev => [...prev, { sender: 'mazu', text: data.response }]);
         } catch (error) {
             console.error(error);
-            setMessages(prev => [...prev, { sender: 'mazu', text: '（系統：連接神明失敗，請確認後端伺服器已啟動且有網路連線。）' }]);
+            setMessages(prev => [...prev, { sender: 'mazu', text: '（系統：連線中斷，請確認網路或伺服器狀態。）' }]);
         } finally {
             setIsLoading(false);
         }
@@ -137,36 +145,36 @@ const App = () => {
             ) : (
                 <div className="glass-container">
                     <div className="form-title" style={{fontSize: '24px'}}>
-                        蓬萊仙島<br/>
+                        默<br/>
                         慈聖宮
                     </div>
                     <div className="almanac-form" style={{padding: '20px 30px', display: 'flex', flexDirection: 'column'}}>
-                        <div className="messages" style={{flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', paddingRight: '10px', scrollbarWidth: 'thin', scrollbarColor: 'var(--vermilion-light) transparent'}}>
+                        <div className="messages" style={{flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', paddingRight: '10px'}}>
                             {messages.map((msg, idx) => (
                                 <div key={idx} className={`message ${msg.sender}`} style={{
                                     alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                                    background: msg.sender === 'user' ? 'rgba(107, 36, 34, 0.1)' : 'rgba(255, 255, 255, 0.5)',
-                                    color: 'var(--vermilion-dark)',
+                                    background: msg.sender === 'user' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(138, 51, 36, 0.15)',
+                                    color: 'var(--text-primary)',
                                     borderRight: msg.sender === 'user' ? '3px solid var(--vermilion-dark)' : 'none',
                                     borderLeft: msg.sender === 'mazu' ? '3px solid var(--vermilion-dark)' : 'none',
                                     padding: '12px 18px',
                                     maxWidth: '85%',
                                     lineHeight: '1.6',
                                     letterSpacing: '1px',
-                                    boxShadow: msg.sender === 'mazu' ? '2px 2px 10px rgba(107, 36, 34, 0.05)' : 'none'
+                                    boxShadow: msg.sender === 'mazu' ? '2px 2px 10px rgba(0, 0, 0, 0.2)' : 'none'
                                 }}>
                                     {msg.text}
                                 </div>
                             ))}
                             {isLoading && <div className="message mazu" style={{
                                 alignSelf: 'flex-start',
-                                background: 'rgba(255, 255, 255, 0.5)',
+                                background: 'rgba(138, 51, 36, 0.15)',
                                 borderLeft: '3px solid var(--vermilion-dark)',
                                 padding: '12px 18px',
                                 opacity: 0.7,
-                                color: 'var(--vermilion-dark)',
+                                color: 'var(--text-primary)',
                                 letterSpacing: '1px'
-                            }}>焚香祝禱，請示中...</div>}
+                            }}>祝禱，請示中...</div>}
                             <div ref={messagesEndRef} />
                         </div>
                         <div className="input-area" style={{display: 'flex', paddingTop: '15px', marginTop: '10px', borderTop: '1px dashed var(--vermilion-dark)', gap: '10px'}}>
@@ -179,7 +187,7 @@ const App = () => {
                                 disabled={isLoading}
                                 style={{
                                     flex: 1, background: 'transparent', border: 'none', borderBottom: '1px solid var(--vermilion-dark)',
-                                    color: 'var(--vermilion-dark)', fontFamily: "'Noto Serif TC', serif", fontSize: '16px', padding: '10px 5px', outline: 'none'
+                                    color: 'var(--text-primary)', fontFamily: "'Noto Serif TC', serif", fontSize: '16px', padding: '10px 5px', outline: 'none'
                                 }}
                             />
                             <button onClick={sendMessage} disabled={isLoading} className="seal-btn" style={{marginTop: '0', padding: '8px 20px', fontSize: '16px'}}>祈願</button>
