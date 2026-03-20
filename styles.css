@@ -2,36 +2,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700&display=swap');
 
 :root {
-  --vermilion-dark: #6B2422; /* 沉穩的黯調硃砂色 */
+  --vermilion-dark: #8A3324; /* 調整為稍微明亮一點的硃砂紅，在黑底更顯眼 */
   --vermilion-light: #A34845;
-  --wabi-bg: #EAE5D9; /* 侘寂風的灰沙色基底 */
-  --glass-bg: rgba(234, 229, 217, 0.4); /* 半透明毛玻璃背景 */
+  --text-primary: #EAE5D9; /* 侘寂風的砂褐色字體 */
+  --glass-bg: rgba(12, 12, 12, 0.65); /* 黑色半透明玻璃 */
 }
 
 body {
   margin: 0;
   overflow: hidden;
   font-family: 'Noto Serif TC', serif;
-  background-color: var(--wabi-bg);
-  color: var(--vermilion-dark);
+  background-color: #050505;
+  color: var(--text-primary);
 }
 
-/* --- 宣紙透光 UI (Xuan Paper Effect) --- */
+/* --- 黑色透明玻璃 UI (Dark Glassmorphism) --- */
 .glass-container { 
   position: relative;
   z-index: 10;
   
-  /* 宣紙的底色：帶點暖黃的米白色，設定 90% 不透明度讓背景水流微微透出 */
-  background-color: rgba(238, 232, 220, 0.92);
+  /* 黑色半透明背景 */
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   
-  /* 魔法在這裡：利用純 CSS 內建 SVG 產生宣紙的粗糙纖維雜訊 */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+  /* 細微的透光邊框與深邃陰影 */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
   
-  /* 邊框與陰影，增加紙張厚度感 */
-  border: 1px solid rgba(107, 36, 34, 0.3);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(107, 36, 34, 0.05);
-  
-  border-radius: 4px; /* 古書通常邊角不會太圓 */
+  border-radius: 6px;
   padding: 40px;
   max-width: 800px;
   height: 80vh;
@@ -43,24 +42,13 @@ body {
 
 /* --- 農民曆 / 籤詩樣式表單 --- */
 .almanac-form {
-  border: 3px double var(--vermilion-dark); /* 傳統雙線框 */
+  border: 1px solid var(--vermilion-dark); /* 簡約邊框 */
   padding: 30px;
   position: relative;
-  background: rgba(255, 255, 255, 0.15); /* 微微的宣紙透光感 */
+  background: rgba(0, 0, 0, 0.2); 
   flex: 1;
   overflow-y: auto;
 }
-
-/* 四個角落的傳統折角裝飾 */
-.almanac-form::before, .almanac-form::after {
-  content: '';
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  border: 2px solid var(--vermilion-dark);
-}
-.almanac-form::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
-.almanac-form::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
 
 /* 標題直書排版 */
 .form-title {
@@ -74,7 +62,7 @@ body {
   padding-left: 20px;
 }
 
-/* 輸入框設計：底線式，去除現代感 */
+/* 輸入框設計：底線式 */
 .input-group {
   margin-bottom: 25px;
   display: flex;
@@ -85,21 +73,26 @@ body {
   font-weight: 700;
   margin-bottom: 5px;
   letter-spacing: 2px;
+  color: var(--text-primary);
 }
 .input-group input, .input-group select {
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--vermilion-dark);
-  color: var(--vermilion-dark);
+  color: var(--text-primary);
   font-family: 'Noto Serif TC', serif;
   font-size: 18px;
   padding: 5px 0;
   outline: none;
   transition: all 0.3s ease;
 }
-.input-group input:focus {
+.input-group select option {
+  background: #111;
+  color: #fff;
+}
+.input-group input:focus, .input-group select:focus {
   border-bottom: 2px solid var(--vermilion-light);
-  box-shadow: 0 5px 5px -5px rgba(107, 36, 34, 0.3);
+  box-shadow: 0 5px 5px -5px rgba(138, 51, 36, 0.4);
 }
 
 /* 硃砂印章風格按鈕 */
@@ -119,14 +112,14 @@ body {
 }
 .seal-btn:hover {
   background: var(--vermilion-dark);
-  color: var(--wabi-bg);
-  box-shadow: 0 0 15px rgba(107, 36, 34, 0.5);
+  color: #000;
+  box-shadow: 0 0 15px rgba(138, 51, 36, 0.5);
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--vermilion-light);
+  background-color: rgba(138, 51, 36, 0.5);
   border-radius: 3px;
 }
