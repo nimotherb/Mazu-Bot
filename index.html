@@ -1,21 +1,53 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>默 - 陪伴機器人</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>默 - 靈境引導系統</title>
+    
+    <!-- React & ReactDOM (UMD versions) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel standalone for JSX transpilation in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Initial loading screen before React mounts */
+        #initial-loader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 99999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; color: #8A3324;
+            font-family: 'Noto Serif TC', serif; font-size: 20px; letter-spacing: 5px;
+        }
+        .bwei-spinner {
+            width: 80px; height: 80px; margin-bottom: 20px;
+            background: #8A3324; border-radius: 50% 0 50% 0;
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-  <!-- 循環播放的影片背景 (預設靜音供自動播放，互動後由 JS 開啟聲音) -->
-  <video id="bg-video" autoplay loop muted playsinline style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
-    <source src="./video-0-60-4omtYUU1SSg.mp4" type="video/mp4" />
-  </video>
-  
-  <div id="root"></div>
-  <script type="text/babel" src="app.jsx"></script>
+    <div id="initial-loader">
+        <div class="bwei-spinner"></div>
+        <div>神機載入中...</div>
+    </div>
+    
+    <div id="root"></div>
+
+    <script>
+        // Remove the loader once React kicks in (it will overwrite #root, but let's hide the loader when window loads)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('initial-loader');
+                if(loader) loader.style.display = 'none';
+            }, 1000); // 1s visual grace period
+        });
+    </script>
+    <!-- Entry point for our React application -->
+    <script type="text/babel" src="app.jsx"></script>
 </body>
 </html>
-

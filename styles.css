@@ -1,11 +1,11 @@
-/* 引入思源宋體，增加傳統農民曆與籤詩的古樸感 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700&display=swap');
+/* 引入思源宋體，增加古樸感 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;700;900&display=swap');
 
 :root {
-  --vermilion-dark: #8A3324; /* 調整為稍微明亮一點的硃砂紅，在黑底更顯眼 */
+  --vermilion-dark: #8A3324;
   --vermilion-light: #A34845;
-  --text-primary: #EAE5D9; /* 侘寂風的砂褐色字體 */
-  --glass-bg: rgba(12, 12, 12, 0.65); /* 黑色半透明玻璃 */
+  --text-primary: #EAE5D9;
+  --glass-bg: rgba(5, 5, 5, 0.75); 
 }
 
 body {
@@ -16,110 +16,299 @@ body {
   color: var(--text-primary);
 }
 
-/* --- 黑色透明玻璃 UI (Dark Glassmorphism) --- */
-.glass-container { 
+/* --- 神機載入 (Loading) --- */
+.bwei-spinner {
+    width: 60px; height: 60px;
+    background: var(--vermilion-dark);
+    border-radius: 50vw 0 50vw 0;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* --- 線狀煙霧層 (Incense Smoke) --- */
+#smoke-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* Below UI */
+  pointer-events: none; /* Let mouse move over but don't block clicks */
+}
+
+/* --- 天地四方收合 UI (Idle Disperse) --- */
+.app-container {
+  width: 100vw;
+  height: 100vh;
   position: relative;
   z-index: 10;
-  
-  /* 黑色半透明背景 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; 
+}
+
+/* 3-Column Layout Overrides when viewing slip */
+.app-container.three-column-layout {
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 0;
+}
+
+/* Disperse Base Transitions */
+.disperse-left { transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), opacity 4s; }
+.disperse-right { transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), opacity 4s; }
+.disperse-down { transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), opacity 4s; }
+
+/* When Idle (天地四方收合) */
+.idle .disperse-left { transform: translateX(-120vw) !important; opacity: 0; }
+.idle .disperse-right { transform: translateX(120vw) !important; opacity: 0; }
+.idle .disperse-down { transform: translateY(120vh) !important; opacity: 0; }
+
+
+/* Main Chat Container */
+.glass-container { 
   background-color: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  
-  /* 細微的透光邊框與深邃陰影 */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-  
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
   border-radius: 6px;
   padding: 40px;
-  max-width: 800px;
+  width: 800px;
+  max-width: 95vw;
   height: 80vh;
-  margin: 5vh auto;
   display: flex;
   gap: 30px;
   box-sizing: border-box;
+  z-index: 20;
+}
+.three-column-layout .glass-container {
+    width: 600px; /* Shrink slightly to fit 3 cols */
+    height: 80vh; 
 }
 
-/* --- 農民曆 / 籤詩樣式表單 --- */
-.almanac-form {
-  border: 1px solid var(--vermilion-dark); /* 簡約邊框 */
-  padding: 30px;
-  position: relative;
-  background: rgba(0, 0, 0, 0.2); 
-  flex: 1;
-  overflow-y: auto;
+/* --- Background / Right Bwa Bwei --- */
+.bg-bwei-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+.three-column-layout .bg-bwei-container {
+    position: relative;
+    width: 200px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
 }
 
-/* 標題直書排版 */
-.form-title {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-size: 28px;
-  letter-spacing: 8px;
-  font-weight: 700;
-  color: var(--vermilion-dark);
-  border-left: 1px solid var(--vermilion-dark);
-  padding-left: 20px;
-}
-
-/* 輸入框設計：底線式 */
-.input-group {
-  margin-bottom: 25px;
-  display: flex;
-  flex-direction: column;
-}
-.input-group label {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  letter-spacing: 2px;
-  color: var(--text-primary);
-}
-.input-group input, .input-group select {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--vermilion-dark);
-  color: var(--text-primary);
-  font-family: 'Noto Serif TC', serif;
-  font-size: 18px;
-  padding: 5px 0;
-  outline: none;
-  transition: all 0.3s ease;
-}
-.input-group select option {
-  background: #111;
-  color: #fff;
-}
-.input-group input:focus, .input-group select:focus {
-  border-bottom: 2px solid var(--vermilion-light);
-  box-shadow: 0 5px 5px -5px rgba(138, 51, 36, 0.4);
-}
-
-/* 硃砂印章風格按鈕 */
-.seal-btn {
-  background: transparent;
-  color: var(--vermilion-dark);
-  border: 2px solid var(--vermilion-dark);
-  padding: 10px 30px;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 5px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-.seal-btn:hover {
+.bg-bwei {
+  position: absolute;
+  width: 80px; height: 180px;
   background: var(--vermilion-dark);
-  color: #000;
-  box-shadow: 0 0 15px rgba(138, 51, 36, 0.5);
+  border-radius: 80px 0 0 80px;
+  opacity: 0.8;
+  box-shadow: inset -10px 0 20px rgba(0,0,0,0.8);
+  transition: all 1.5s ease-in-out;
+}
+/* By default floating in background */
+.bg-bwei.left-bwei { top: 30%; left: 8%; transform: rotate(-15deg); }
+.bg-bwei.right-bwei { 
+    top: 60%; right: 8%; 
+    border-radius: 0 80px 80px 0; 
+    box-shadow: inset 10px 0 20px rgba(0,0,0,0.8); 
+    transform: rotate(20deg); 
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+/* When in 3-column layout, snap they to the right panel */
+.three-column-layout .bg-bwei.left-bwei {
+    position: relative; top: auto; left: auto; transform: rotate(-10deg);
 }
-::-webkit-scrollbar-thumb {
-  background-color: rgba(138, 51, 36, 0.5);
-  border-radius: 3px;
+.three-column-layout .bg-bwei.right-bwei {
+    position: relative; top: auto; right: auto; transform: rotate(15deg);
 }
+
+/* 擲筊時的聚合與翻甩效果 */
+.bg-bwei-container.ritual-active .bg-bwei.left-bwei {
+  position: absolute; top: 45%; left: 45%;
+  transform: rotate(0deg) scale(1);
+  opacity: 1; z-index: 999;
+}
+.bg-bwei-container.ritual-active .bg-bwei.right-bwei {
+  position: absolute; top: 45%; right: 45%;
+  transform: rotate(0deg) scale(1);
+  opacity: 1; z-index: 999;
+}
+
+/* 擲筊翻轉動畫 */
+.bg-bwei.throw-anim { animation: toss3D 2s ease-in-out forwards; }
+@keyframes toss3D {
+  0% { transform: translateY(0) rotate(0deg); background: var(--vermilion-dark); }
+  25% { transform: translateY(-200px) rotate(180deg); background: #D5B895; }
+  50% { transform: translateY(-50px) rotate(360deg); background: var(--vermilion-dark); }
+  75% { transform: translateY(-100px) rotate(540deg); background: #D5B895; }
+  100% { transform: translateY(0) rotate(720deg); }
+}
+
+/* 筊面結果 (聖、笑、蓋) */
+.bg-bwei.flat-face { background: #D5B895 !important; }
+.bg-bwei.round-face { background: var(--vermilion-dark) !important; }
+
+
+/* --- 左側/內嵌 籤詩 UI (Fortune UI) --- */
+.fortune-slip-panel {
+  width: 380px; height: 80vh; 
+  background-color: var(--vermilion-light);
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.15"/></svg>');
+  border: 4px double #000;
+  box-shadow: 0 0 70px rgba(0,0,0,0.95);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: 30px 20px; box-sizing: border-box;
+  color: #050505; font-family: 'Noto Serif TC', serif;
+  z-index: 20;
+}
+/* If it's floating (not 3-column yet, like history view over chat) */
+.fortune-slip-panel.modal-mode {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    height: 675px; z-index: 300;
+}
+
+.fortune-header {
+  writing-mode: horizontal-tb; text-align: center;
+  font-weight: 900; font-size: 26px; letter-spacing: 5px;
+  border-bottom: 2px solid #000; padding-bottom: 10px; width: 100%;
+}
+.fortune-stars { font-size: 18px; margin: 10px 0; font-weight: 700; }
+.fortune-body { 
+  display: flex; flex-direction: column; align-items: center; 
+  flex: 1; margin-top: 10px; width: 100%;
+}
+.fortune-poem { 
+  writing-mode: vertical-rl; text-orientation: upright; 
+  font-size: 24px; font-weight: 700; letter-spacing: 6px; line-height: 2.2; 
+  height: 55%; width: 100%; display: flex; justify-content: center;
+  border-bottom: 1px dashed rgba(0,0,0,0.5); padding-bottom: 15px;
+}
+.fortune-meta { 
+  writing-mode: horizontal-tb; 
+  font-size: 15px; width: 100%; display: flex; flex-direction: column; 
+  justify-content: center; text-align: center; padding-top: 15px;
+  line-height: 2.0; font-weight: 700; color: #111;
+}
+.close-slip-btn { background: transparent; border: 1px solid #000; color: #000; padding: 5px 20px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 20px;}
+.close-slip-btn:hover { background: #000; color: var(--vermilion-light); }
+
+
+/* --- 左側歷史籤櫃 (History Sidebar) --- */
+.history-sidebar {
+  position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 15px; z-index: 30;
+}
+.history-item {
+  width: 50px; height: 120px;
+  background: rgba(163, 40, 36, 0.8); border: 1px solid #000; color: #000;
+  writing-mode: vertical-rl; text-align: center; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.4s;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+.history-item:hover { transform: scale(1.1) translateX(10px); background: var(--vermilion-dark); }
+/* Hide history if 3 column active since the left is occupied by the slip */
+.three-column-layout .history-sidebar { display: none; }
+
+
+/* --- 開場引言過場 --- */
+.intro-screen {
+  position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #000; color: #EAE5D9; z-index: 9999;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  transition: opacity 3s ease; font-size: 22px; letter-spacing: 6px; text-align: center; line-height: 2.5;
+}
+
+/* --- 表單/對話區 共用基礎 --- */
+.form-title {
+  writing-mode: vertical-rl; text-orientation: upright; font-size: 28px;
+  letter-spacing: 8px; font-weight: 700; color: var(--vermilion-dark);
+  border-left: 1px solid var(--vermilion-dark); padding-left: 20px;
+}
+.almanac-form {
+  border: 1px solid var(--vermilion-dark); padding: 30px;
+  background: rgba(0, 0, 0, 0.3); flex: 1; overflow-y: auto;
+  position: relative; display: flex; flex-direction: column;
+}
+.input-group { margin-bottom: 20px; display: flex; flex-direction: column; }
+.input-group label { font-size: 13px; color: #aaa; margin-bottom: 4px; letter-spacing: 2px; }
+.input-group input, .input-group select {
+  background: transparent; border: none; border-bottom: 1px solid #555;
+  color: var(--text-primary); font-family: 'Noto Serif TC', serif; font-size: 16px;
+  padding: 5px 0; outline: none; transition: all 0.3s;
+}
+.input-group input:focus, .input-group select:focus { border-bottom: 1px solid var(--vermilion-light); }
+.input-group select option { background: #111; }
+.seal-btn {
+  background: transparent; color: var(--vermilion-dark); border: 1px solid var(--vermilion-dark);
+  padding: 10px 30px; font-family: inherit; font-size: 16px; letter-spacing: 4px;
+  cursor: pointer; transition: 0.4s; margin-top: 10px;
+}
+.seal-btn:hover { background: var(--vermilion-dark); color: #000; box-shadow: 0 0 15px rgba(138, 51, 36, 0.4); }
+
+/* --- 測驗 --- */
+.quiz-options { display: flex; gap: 20px; justify-content: center; }
+.quiz-btn {
+  background: rgba(255,255,255,0.05); border: 1px solid #555; color: var(--text-primary);
+  padding: 15px 30px; font-family: inherit; font-size: 18px; cursor: pointer; transition: 0.3s; flex: 1;
+}
+.quiz-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--text-primary); }
+
+/* --- 對話訊息 --- */
+.messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 10px; }
+.message { padding: 15px 20px; max-width: 85%; line-height: 1.8; letter-spacing: 1px; font-size: 16px; }
+.message.user { align-self: flex-end; background: rgba(255, 255, 255, 0.03); border-right: 2px solid #555; }
+.message.mazu { align-self: flex-start; background: rgba(138, 51, 36, 0.08); border-left: 2px solid var(--vermilion-dark); }
+
+/* --- 五色籤詩呼吸燈 --- */
+.fortune-categories { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.cat-btn {
+  padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5);
+  color: #fff; font-family: inherit; font-size: 14px; cursor: pointer; transition: 0.5s;
+  animation: breathe 3s infinite alternate;
+}
+.cat-btn:hover { transform: scale(1.05); }
+.cat-btn.disabled { opacity: 0.3; animation: none; pointer-events: none; filter: grayscale(1); }
+.cat-btn.事業 { border-color: #3498DB; box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
+.cat-btn.感情 { border-color: #E74C3C; box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+.cat-btn.健康 { border-color: #2ECC71; box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+.cat-btn.財運 { border-color: #F1C40F; box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
+.cat-btn.流年 { border-color: #9B59B6; box-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
+@keyframes breathe { 0% { opacity: 0.7; box-shadow: 0 0 5px currentColor; } 100% { opacity: 1; box-shadow: 0 0 20px currentColor; } }
+
+/* --- 快捷解籤按鈕 --- */
+.quick-reply-dock { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.quick-btn {
+  background: transparent; border: 1px solid var(--vermilion-light); color: var(--text-primary);
+  padding: 5px 12px; font-size: 13px; font-family: inherit; cursor: pointer; border-radius: 4px; transition: 0.3s;
+}
+.quick-btn:hover { background: var(--vermilion-light); color: #000; }
+
+/* RWD */
+@media (max-width: 1024px) {
+  .app-container.three-column-layout { flex-direction: column; overflow-y: auto; padding: 20px; justify-content: flex-start; gap: 40px;}
+  .history-sidebar { flex-direction: row; top: 10px; left: 50%; transform: translateX(-50%); }
+  .history-item { width: 40px; height: 40px; writing-mode: horizontal-tb; border-radius: 50%; }
+  .three-column-layout .glass-container { width: 100%; max-width: 100%; height: 500px; }
+  .three-column-layout .bg-bwei-container { height: 150px; flex-direction: row; width: 100%; }
+}
+@media (max-width: 768px) {
+  .glass-container { flex-direction: column; height: 95vh; padding: 20px; overflow-y: auto;}
+  .form-title { writing-mode: horizontal-tb; border-left: none; border-bottom: 1px solid var(--vermilion-dark); padding: 0 0 10px 0; margin-bottom: 20px; }
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 3px; }
