@@ -116,7 +116,11 @@ async def chat_with_mazu(request: ChatRequest):
 
 # Mount frontend static files
 frontend_dir_local = os.path.join(base_dir, "..", "frontend")
-frontend_dir_flat = base_dir
+# 修改前是 frontend_dir_flat = base_dir 那些，請將掛載區塊直接換成下面這樣：
+
+frontend_dir = os.path.join(base_dir, "frontend")
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
 frontend_dir = frontend_dir_local if os.path.isdir(frontend_dir_local) else frontend_dir_flat
 
 app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
