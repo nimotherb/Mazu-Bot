@@ -1,0 +1,18 @@
+{
+  "setupTasks": [
+    {
+      "name": "Install",
+      "command": "pip install -r requirements.txt"
+    }
+  ],
+  "tasks": {
+    "start": {
+      "name": "Server",
+      "command": "uvicorn main:app --host 0.0.0.0 --port 8000",
+      "runAtStart": true,
+      "preview": {
+        "port": 8000
+      }
+    }
+  }
+}
