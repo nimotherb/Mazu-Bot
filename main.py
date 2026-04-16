@@ -115,14 +115,17 @@ async def chat_with_mazu(request: ChatRequest):
         raise HTTPException(status_code=500, detail="神明連線中斷，請稍後再試。")
 
 # Mount frontend static files
+# 1. 預先定義好兩種可能的前端資料夾路徑 (本地端環境 vs CodeSandbox 扁平環境)
 frontend_dir_local = os.path.join(base_dir, "..", "frontend")
-# 修改前是 frontend_dir_flat = base_dir 那些，請將掛載區塊直接換成下面這樣：
+frontend_dir_flat = os.path.join(base_dir, "frontend")
 
-frontend_dir = os.path.join(base_dir, "frontend")
-app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+# 2. 判斷哪個路徑在目前系統中實際存在，就使用哪一個
+if os.path.isdir(frontend_dir_local):
+    frontend_dir = frontend_dir_local
+else:
+    frontend_dir = frontend_dir_flat
 
-frontend_dir = frontend_dir_local if os.path.isdir(frontend_dir_local) else frontend_dir_flat
-
+# 3. 執行掛載 (確保只呼叫一次)
 app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 if __name__ == "__main__":
