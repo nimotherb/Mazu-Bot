@@ -130,4 +130,5 @@ app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # 注意這裡的寫法改變了！把 app 變成字串 "main:app"，並且加上 reload=True
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
